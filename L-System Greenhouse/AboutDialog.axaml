@@ -1,0 +1,45 @@
+﻿<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        x:Class="L_System_Greenhouse.AboutDialog"
+        xmlns:c="clr-namespace:L_System_Greenhouse"
+        Title="About L-System Greenhouse"
+        Width="350"
+        Height="200"
+        CanResize="False"
+        WindowStartupLocation="CenterOwner"
+        Icon="Assets/app_icon.ico"
+        >
+    <StackPanel Orientation="Vertical" Margin="10, 10, 10, 10">
+        <StackPanel 
+            Orientation="Vertical"
+            Spacing="7"
+            >
+            <TextBlock Text="{Binding Source={x:Static c:StringLiterals.AppName}}"/>
+            <TextBlock>(C) Copyright 2025, Eric Bergman-Terrell</TextBlock>
+            <HyperlinkButton 
+                Content="www.EricBT.com"
+                NavigateUri="https://www.EricBT.com"
+                Name="GoToWebsite"
+            />
+            <StackPanel Orientation="Horizontal">
+                <TextBlock VerticalAlignment="Center">App icon created by </TextBlock>
+                <HyperlinkButton
+                    Content="Pedro1267"
+                    NavigateUri="https://commons.wikimedia.org/wiki/Special:Contributions/Pedro1267"
+                    VerticalAlignment="Top"
+                    />
+            </StackPanel>
+        </StackPanel>
+        <Button 
+            Name="Close"
+            Content="_Close"
+            Click="Close_OnClick"
+            Margin="0, 20, 0, 0"
+            HorizontalAlignment="Center"
+            />
+    </StackPanel>
+    
+</Window>

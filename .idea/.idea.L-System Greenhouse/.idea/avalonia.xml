@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AvaloniaProject">
+    <option name="projectPerEditor">
+      <map>
+        <entry key="L-System Greenhouse/About.axaml" value="L-System Greenhouse/L-System Greenhouse.csproj" />
+        <entry key="L-System Greenhouse/AboutDialog.axaml" value="L-System Greenhouse/L-System Greenhouse.csproj" />
+        <entry key="L-System Greenhouse/App.axaml" value="L-System Greenhouse/L-System Greenhouse.csproj" />
+        <entry key="L-System Greenhouse/Commands.axaml" value="L-System Greenhouse/L-System Greenhouse.csproj" />
+        <entry key="L-System Greenhouse/CommandsDialog.axaml" value="L-System Greenhouse/L-System Greenhouse.csproj" />
+        <entry key="L-System Greenhouse/GraphicsSurface.axaml" value="L-System Greenhouse/L-System Greenhouse.csproj" />
+        <entry key="L-System Greenhouse/HelpDialog.axaml" value="L-System Greenhouse/L-System Greenhouse.csproj" />
+        <entry key="L-System Greenhouse/MainWindow.axaml" value="L-System Greenhouse/L-System Greenhouse.csproj" />
+      </map>
+    </option>
+  </component>
+</project>

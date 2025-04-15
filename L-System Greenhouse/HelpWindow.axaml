@@ -1,0 +1,70 @@
+﻿<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        x:Class="L_System_Greenhouse.HelpWindow"
+        DataContext="{Binding RelativeSource={RelativeSource Mode=Self}}"
+        Title="L-System Greenhouse - Commands"
+        Width="650"
+        MinWidth="650"
+        Height="575"
+        MinHeight="575"
+        WindowStartupLocation="CenterOwner"
+        Icon="Assets/app_icon.ico"
+        >
+    <Grid Margin="10, 10, 10, 10" RowDefinitions="Auto,Auto,*,Auto">
+
+        <DataGrid
+            Grid.Row="0"
+            ItemsSource="{Binding Documentation.Items}"
+            Name="DocumentationGrid"
+            BorderThickness="1"
+            BorderBrush="Black">
+            <DataGrid.Columns>
+                <DataGridTemplateColumn Header="Symbol" Width="auto">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock 
+                                Text="{Binding Symbol}"
+                                FontFamily="Lucida Console"
+                                FontSize="16" 
+                                VerticalAlignment="Center" 
+                                TextWrapping="Wrap" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                            
+                <!-- DataGridTextColumns don't wrap! -->
+                <DataGridTemplateColumn Header="Meaning" Width="*">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock 
+                                Text="{Binding Definition}" 
+                                FontSize="16" 
+                                VerticalAlignment="Center" 
+                                TextWrapping="Wrap" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+            </DataGrid.Columns>
+        </DataGrid>
+        
+        <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0, 20, 0, 0">
+            <TextBlock FontSize="16" TextWrapping="Wrap">If multiple productions have the same letter, only the first production will be used.</TextBlock>
+        </StackPanel>
+        
+        <StackPanel Grid.Row="2"></StackPanel>
+        <StackPanel
+            Grid.Row="3"
+            Orientation="Horizontal"
+            HorizontalAlignment="Center"
+            >
+            <Button
+                Name="Close"
+                Content="_Close"
+                Click="Close_OnClick"
+                />
+        </StackPanel>
+    </Grid>
+</Window>

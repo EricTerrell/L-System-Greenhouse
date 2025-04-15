@@ -1,0 +1,256 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:lSystemGreenhouse="clr-namespace:L_System_Greenhouse"
+        DataContext="{Binding RelativeSource={RelativeSource Mode=Self}}"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        MinWidth="1300"
+        Width="1300"
+        MinHeight="850"
+        Height="850"
+        x:Class="L_System_Greenhouse.MainWindow"
+        Title="L-System Greenhouse - Untitled"
+        Closing="Window_OnClosing"
+        WindowStartupLocation="CenterScreen"
+        Icon="Assets/app_icon.ico"
+        >
+    <DockPanel>
+        <Menu DockPanel.Dock="Top">
+            <MenuItem Header="_File">
+                <MenuItem 
+                    Header="_Open..."
+                    Name="FileOpen"
+                    Click="FileOpen_OnClick"
+                    HotKey="Ctrl+O"
+                    InputGesture="Ctrl+O"
+                    IsEnabled="{Binding !IsDrawing}"
+                    />
+                <MenuItem 
+                    Header="_Save"
+                    Name="FileSave"
+                    HotKey="Ctrl+S"
+                    InputGesture="Ctrl+S"
+                    IsEnabled="{Binding !IsDrawing}"
+                    Click="FileSave_OnClick"
+                    />
+                <MenuItem 
+                    Header="Save _As..."
+                    Name="FileSaveAs"
+                    HotKey="Ctrl+Shift+S"
+                    InputGesture="Ctrl+Shift+S"
+                    IsEnabled="{Binding !IsDrawing}"
+                    Click="FileSaveAs_OnClick"
+                    />
+                <Separator/>
+                <MenuItem 
+                    Header="_Exit"
+                    Name="FileExit"
+                    Click="FileExit_OnClick"
+                    />
+            </MenuItem>
+            <MenuItem Header="_Help">
+                <MenuItem 
+                    Header="_Help..."
+                    Name="HelpHelp"
+                    HotKey="F1"
+                    InputGesture="F1"
+                    Click="HelpHelp_OnClick"
+                    />
+                <Separator />
+                <MenuItem 
+                    Header="_About..."
+                    Name="HelpAbout"
+                    Click="HelpAbout_OnClick"
+                    />
+            </MenuItem>
+        </Menu>
+        
+    <Grid Margin="10, 10, 10, 0" RowDefinitions="*,Auto,Auto,Auto" ColumnDefinitions="*,*">
+
+        <StackPanel Grid.Row="0" Grid.Column="0" Orientation="Vertical" HorizontalAlignment="Stretch">
+            <StackPanel Orientation="Horizontal">
+                <StackPanel Orientation="Horizontal" Margin="0, 10, 0, 0">
+                    <Label Target="AxiomTB" Content="A_xiom:" />
+                    <TextBox
+                        Name="AxiomTB"
+                        Text="{Binding UilSystem.Axiom}" FontFamily="Lucida Console"
+                        Width="350"
+                        TextChanged="AxiomTB_OnTextChanged"
+                        FontSize="24" />
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Margin="10, 0, 0, 0">
+                    <Label Target="IterationsUD" Content="I_terations:" />
+                    <NumericUpDown
+                        Name="IterationsUD"
+                        Minimum="0"
+                        Maximum="100"
+                        FormatString="N0"
+                        Value="{Binding UilSystem.Iterations}"
+                        VerticalAlignment="Center"
+                        Width="120">
+                    </NumericUpDown>
+                </StackPanel>
+            </StackPanel>
+
+            <StackPanel Orientation="Vertical" Margin="0, 10, 0, 0">
+                <Label 
+                    Content="_Productions:" 
+                    Target="ProductionsGrid"
+                    Margin="0, 0, 0, 5"
+                    />
+                <DataGrid
+                    ItemsSource="{Binding UilSystem.Productions}"
+                    GridLinesVisibility="All"
+                    BorderThickness="1"
+                    BorderBrush="Gray"
+                    CanUserResizeColumns="True"
+                    IsReadOnly="False"
+                    Name="ProductionsGrid"
+                    Height="300">
+                    <DataGrid.Columns>
+                        <DataGridTemplateColumn Header="Convert" Width="auto">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBox 
+                                        Text="{Binding Letter}"
+                                        FontFamily="Lucida Console"
+                                        FontSize="24" 
+                                        VerticalAlignment="Center"
+                                        MaxLength="1"
+                                        />
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+
+                        <DataGridTemplateColumn Header="To" Width="500">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBox
+                                        Text="{Binding ReplacementLetters}"
+                                        FontFamily="Lucida Console"
+                                        FontSize="24"
+                                        TextWrapping="Wrap" />
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+                    </DataGrid.Columns>
+                </DataGrid>
+                <StackPanel Orientation="Horizontal" Margin="0, 5, 0, 0">
+                    <Button
+                        Name="AddProduction"
+                        Content="_Add"
+                        Click="AddProduction_OnClick" />
+                    <Button
+                        Name="DeleteProduction"
+                        Content="_Delete"
+                        IsEnabled="{Binding ElementName=ProductionsGrid, Path=SelectedItem, 
+                                        Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
+                        Click="DeleteProduction_OnClick"
+                        Margin="10, 0, 0, 0" />
+                </StackPanel>
+            </StackPanel>
+            <StackPanel Orientation="Vertical" Margin="0, 20, 0, 0">
+                <Label 
+                    Content="Turtle State:"
+                    Target="TurtleStateGrid"
+                    />
+                <Grid 
+                    RowDefinitions="*,*,*,*,*,*,*" 
+                    ColumnDefinitions="Auto,*" 
+                    Width="350" 
+                    HorizontalAlignment="Left"
+                    Margin="0, 20, 0, 0"
+                    Name="TurtleStateGrid"
+                    >
+                    <Label Grid.Row="0" Grid.Column="0" Content="H_eading (degrees):" Target="HeadingUD"/>
+                    <NumericUpDown Grid.Row="0" Grid.Column="1"
+                                   Value="{Binding TurtleGraphicsStateUI.Heading, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                   Minimum="0"
+                                   Maximum="359"
+                                   Name="HeadingUD" />
+
+                    <Label Grid.Row="1" Grid.Column="0" Content="_Line Length:" Target="LineLengthUD"/>
+                    <NumericUpDown Grid.Row="1" Grid.Column="1"
+                                   Minimum="1"
+                                   Maximum="100"
+                                   Name="LineLengthUD"
+                                   Value="{Binding TurtleGraphicsStateUI.LineLength, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+
+                    <Label Grid.Row="2" Grid.Column="0" Content="Line Length _Scale Factor:" Target="LineLengthScaleFactorUD"/>
+                    <NumericUpDown Grid.Row="2" Grid.Column="1"
+                                   Value="{Binding TurtleGraphicsStateUI.LineLengthScaleFactor}"
+                                   Minimum=".125"
+                                   Name="LineLengthScaleFactorUD" />
+
+                    <Label Grid.Row="3" Grid.Column="0" Content="Line _Width:" Target="LineWidthUD"/>
+                    <NumericUpDown Grid.Row="3" Grid.Column="1"
+                                   Value="{Binding TurtleGraphicsStateUI.LineWidth, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                   Minimum="1"
+                                   Name="LineWidthUD"
+                                   FormatString="N0" />
+
+                    <Label Grid.Row="4" Grid.Column="0" Content="Line Width _Increment:" Target="LineWidthIncrementUD"/>
+                    <NumericUpDown Grid.Row="4" Grid.Column="1"
+                                   Value="{Binding TurtleGraphicsStateUI.LineWidthIncrement}"
+                                   Minimum="1"
+                                   Name="LineWidthIncrementUD" />
+
+                    <Label Grid.Row="5" Grid.Column="0" Content="Turn An_gle (degrees):" Target="TurnAngleUD"/>
+                    <NumericUpDown Grid.Row="5" Grid.Column="1"
+                                   Value="{Binding TurtleGraphicsStateUI.TurnAngle, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                   Minimum="1"
+                                   Name="TurnAngleUD" />
+
+                    <Label Grid.Row="6" Grid.Column="0" Content="Turn Angle Incre_ment:" Target="TurnAngleIncrementUD"/>
+                    <NumericUpDown Grid.Row="6" Grid.Column="1"
+                                   Value="{Binding TurtleGraphicsStateUI.TurnAngleIncrement, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                   Minimum="1"
+                                   Name="TurnAngleIncrementUD" />
+                </Grid>
+            </StackPanel>
+        </StackPanel>
+
+        <lSystemGreenhouse:GraphicsSurface
+            Grid.Row="0" Grid.Column="1"
+            Grid.RowSpan="2"
+            Margin="20, 0, 0, 0"
+            Name="GraphicsSurface"
+            BorderThickness="1"
+            BorderBrush="White"
+            VerticalAlignment="Stretch"
+            HorizontalAlignment="Stretch"
+            />
+
+        <StackPanel Grid.Row="1" Grid.Column="0" Orientation="Horizontal">
+            <Button
+                Name="Draw"
+                Content="_Draw"
+                Click="Draw_OnClick"
+                IsEnabled="{Binding CanDraw}"
+                />
+            <Button
+                Name="Cancel"
+                Content="Ca_ncel"
+                Click="Cancel_OnClick"
+                IsEnabled="{Binding IsDrawing}"
+                Margin="10, 0, 0, 0" />
+            <Button
+                Name="SaveBitmap"
+                Content="Save _Bitmap"
+                IsEnabled="{Binding Bitmap, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
+                Click="SaveBitmap_OnClick"
+                Margin="20, 0, 0, 0" />
+        </StackPanel>
+
+        <!-- Takes up remaining space above status bar -->
+        <StackPanel Grid.Row="2" Grid.Column="0" />
+
+        <StackPanel Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2" Orientation="Vertical">
+            <Label Name="Status" FontFamily="Lucida Console" Margin="0, 10, 0, 10" Background="DarkSlateGray"
+                   Foreground="White" Content=" ">
+            </Label>
+        </StackPanel>
+    </Grid>
+    </DockPanel>
+</Window>
