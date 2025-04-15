@@ -24,6 +24,10 @@ Remarkably, these simple grammars can generate graphics of spectacular beauty.
 
 ![L-System Greenhouse](https://www.ericbt.com/uploaded_images/L-System%20Greenhouse%202.png "Eric's Twig")
 
+# Sample L-System Greenhouse Files
+
+Open the sample files in the release to generate some striking images. They're in the "Sample L-System Greenhouse Files" folder.
+
 # Requirements
 
 L-System Greenhouse runs on Windows or Linux. It could be easily updated to run on Apple OSX machines.
@@ -33,6 +37,8 @@ L-System Greenhouse runs on Windows or Linux. It could be easily updated to run 
 L-System Greenhouse was developed in the C# programming language, using [`Avalonia`](https://avaloniaui.net/platforms), which allows developers to create .NET UI apps for Windows, Linux, and OSX. 
 
 The app was developed with the [`JetBrains Rider`](https://www.jetbrains.com/rider/) IDE.
+
+After building the app, use the scripts in the "deploy" folder to generate the executable and dependencies.
 
 # References
 
