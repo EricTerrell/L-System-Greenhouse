@@ -11,6 +11,7 @@ using Avalonia.Interactivity;
 using Avalonia.Media;
 using Avalonia.Media.Imaging;
 using Avalonia.Platform.Storage;
+using Avalonia.Threading;
 using L_System_Greenhouse.TurtleGraphics;
 using L_System_Greenhouse.Utils;
 using L_System_Greenhouse.ViewModels;
@@ -96,10 +97,18 @@ public partial class MainWindow : Window, INotifyPropertyChanged
         
         DataContext = this;
 
-        _uiLSystem = new ViewModels.LSystem();
+        _uiLSystem = new ViewModels.LSystem
+        {
+            Axiom       = "F",
+            Iterations  = 4,
+            Productions = [new Production { Letter = "F", ReplacementLetters = "F[+FF][-FF]F[-F][+F]F" }]
+        };
 
         // Need to ensure that UI updates properly.
         UilSystem = _uiLSystem;
+        
+        // Simulate a Draw button click on the UI thread.
+        Dispatcher.UIThread.Post(() => Draw_OnClick(null, null));
     }
 
     private void AddProduction_OnClick(object? sender, RoutedEventArgs e)
