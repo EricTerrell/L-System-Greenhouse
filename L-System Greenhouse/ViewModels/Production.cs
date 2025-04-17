@@ -4,9 +4,9 @@ namespace L_System_Greenhouse.ViewModels;
 
 public class Production : ObservableObject
 {
-    private string _letter;
+    private string? _letter;
 
-    public string Letter
+    public string? Letter
     {
         get => _letter;
         set
@@ -16,9 +16,9 @@ public class Production : ObservableObject
         }
     }
     
-    private string _replacementLetters;
+    private string? _replacementLetters;
 
-    public string ReplacementLetters
+    public string? ReplacementLetters
     {
         get => _replacementLetters;
         set

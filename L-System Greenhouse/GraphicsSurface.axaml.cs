@@ -7,7 +7,7 @@ namespace L_System_Greenhouse;
 
 public partial class GraphicsSurface : UserControl
 {
-    private Bitmap _bitmap;
+    private Bitmap? _bitmap;
 
     public GraphicsSurface()
     {
@@ -25,7 +25,7 @@ public partial class GraphicsSurface : UserControl
         }
     }
 
-    public void Draw(Bitmap bitmap)
+    public void Draw(Bitmap? bitmap)
     {
         _bitmap = bitmap;
         

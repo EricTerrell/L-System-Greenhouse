@@ -11,7 +11,7 @@ public class PenPool
 
     public PenPool(int maxThickness)
     {
-        _pens = new();
+        _pens = new Dictionary<int, ImmutablePen>();
 
         for (var thickness = 1; thickness <= maxThickness; thickness++)
         {

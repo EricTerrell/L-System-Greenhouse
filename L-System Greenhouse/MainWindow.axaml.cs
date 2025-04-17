@@ -24,9 +24,9 @@ public partial class MainWindow : Window, INotifyPropertyChanged
 {
     private static readonly ILog Log = LogManager.GetLogger(typeof(Program));
 
-    private Bitmap _bitmap;
+    private Bitmap? _bitmap;
 
-    public Bitmap Bitmap
+    public Bitmap? Bitmap
     {
         get => _bitmap;
         set
@@ -36,7 +36,7 @@ public partial class MainWindow : Window, INotifyPropertyChanged
         }
     }
     
-    private HelpWindow _helpWindow;
+    private HelpWindow? _helpWindow;
 
     private IStorageFile _file;
 
@@ -149,10 +149,7 @@ public partial class MainWindow : Window, INotifyPropertyChanged
         {
             CanResize = false;
             
-            if (_cancellationTokenSource != null)
-            {
-                _cancellationTokenSource.Dispose();
-            }
+            _cancellationTokenSource?.Dispose();
             
             _cancellationTokenSource = new CancellationTokenSource();
 
@@ -173,11 +170,8 @@ public partial class MainWindow : Window, INotifyPropertyChanged
 
             var lineCount = 0;
 
-            if (Bitmap != null)
-            {
-                Bitmap.Dispose();
-                Bitmap = null;
-            }
+            Bitmap?.Dispose();
+            Bitmap ??= null;
             
             var bitmap = await Task.Run(() =>
                 {
@@ -197,7 +191,8 @@ public partial class MainWindow : Window, INotifyPropertyChanged
 
                         cancellationToken.ThrowIfCancellationRequested();
 
-                        var bitmap = new RenderTargetBitmap(new PixelSize((int)GraphicsSurface.Bounds.Width, (int)GraphicsSurface.Bounds.Height));
+                        var bitmap = new RenderTargetBitmap(
+                            new PixelSize((int)GraphicsSurface.Bounds.Width, (int)GraphicsSurface.Bounds.Height));
                         using var ctx = bitmap.CreateDrawingContext(true);
 
                         ctx.FillRectangle(Brushes.Black, new Rect(0, 0, Bounds.Width, Bounds.Height));
@@ -260,11 +255,7 @@ public partial class MainWindow : Window, INotifyPropertyChanged
     
     private void Window_OnClosing(object? sender, WindowClosingEventArgs e)
     {
-        // Close modeless Help window if necessary.
-        if (_helpWindow != null)
-        {
-            _helpWindow.Close();
-        }
+            _helpWindow?.Close();
     }
 
     private void AxiomTB_OnTextChanged(object? sender, TextChangedEventArgs e)
@@ -367,7 +358,7 @@ public partial class MainWindow : Window, INotifyPropertyChanged
             FileTypeChoices = [ LSGHFileFilter, AllFilesFileFilter ]
         });
 
-        if (file is not null)
+        if (file != null)
         {
             _file = file;
 
@@ -389,9 +380,9 @@ public partial class MainWindow : Window, INotifyPropertyChanged
             FileTypeChoices = [ BitmapFileFilter, AllFilesFileFilter ]
         });
 
-        if (file is not null)
+        if (file != null)
         {
-            Bitmap.Save(file.TryGetLocalPath());
+            Bitmap?.Save(file.TryGetLocalPath());
         }
     }
 }
