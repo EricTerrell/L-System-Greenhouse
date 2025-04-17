@@ -23,7 +23,8 @@ public class ConvertToLineData
         return new Point(turtlePoint.X + _halfSide, _halfSide - turtlePoint.Y);
     }
 
-    public List<LineData> Convert(List<TurtleCommand> turtleCommands, Rect bounds, CancellationToken cancellationToken)
+    public List<LineData> Convert(List<TurtleCommand> turtleCommands, Rect bounds, CancellationToken cancellationToken,
+        IProgress<string>? progress = null)
     {
         _halfSide = Math.Min(bounds.Width, bounds.Height) / 2;
 
@@ -33,12 +34,14 @@ public class ConvertToLineData
         {
             try
             {
-                lines = ComputeLineData(turtleCommands, cancellationToken);
+                lines = ComputeLineData(turtleCommands, cancellationToken, progress);
 
                 if (lines.Count > 0)
                 {
                     cancellationToken.ThrowIfCancellationRequested();
 
+                    progress?.Report("Adjusting lines to fit in the display surface");
+                    
                     const int margin = 10;
                     var margin2X = margin * 2;
 
@@ -89,7 +92,8 @@ public class ConvertToLineData
         return lines;
     }
     
-    private List<LineData> ComputeLineData(List<TurtleCommand> turtleCommands, CancellationToken cancellationToken)
+    private List<LineData> ComputeLineData(List<TurtleCommand> turtleCommands, CancellationToken cancellationToken,
+        IProgress<string>? progress = null)
     {
         var lineData = new List<LineData>();
 
@@ -97,9 +101,18 @@ public class ConvertToLineData
         {
             if (turtleCommands.Count > 0)
             {
+                int turtleCommandsProcessed = 0;
+                
                 turtleCommands.ForEach(turtleCommand =>
                 {
                     cancellationToken.ThrowIfCancellationRequested();
+
+                    turtleCommandsProcessed++;
+
+                    if (turtleCommandsProcessed == 1 || turtleCommandsProcessed % 1_000_000 == 0)
+                    {
+                        progress?.Report($"Computed line data for {turtleCommandsProcessed:N0} of {turtleCommands.Count:N0} turtle commands");
+                    }
 
                     if (turtleCommand.Action == Action.MoveForwardVisibly)
                     {

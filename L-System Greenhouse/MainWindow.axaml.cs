@@ -177,17 +177,22 @@ public partial class MainWindow : Window, INotifyPropertyChanged
                 {
                     try
                     {
-                        var lSystemOutput = lSystem.Rewrite(UilSystem.Iterations, cancellationToken);
+                        var progress = new Progress<string>(progressMessage =>
+                        {
+                            Dispatcher.UIThread.Post(() => { Status.Content = progressMessage; });
+                        });
+
+                        var lSystemOutput = lSystem.Rewrite(UilSystem.Iterations, cancellationToken, progress);
 
                         cancellationToken.ThrowIfCancellationRequested();
 
                         var turtleCommands = ConvertToTurtleGraphics
-                            .Convert(lSystemOutput.ToList(), turtleGraphicsState, cancellationToken);
+                            .Convert(lSystemOutput.ToList(), turtleGraphicsState, cancellationToken, progress);
 
                         cancellationToken.ThrowIfCancellationRequested();
 
                         var lineData = new ConvertToLineData()
-                            .Convert(turtleCommands, GraphicsSurface.Bounds, cancellationToken);
+                            .Convert(turtleCommands, GraphicsSurface.Bounds, cancellationToken, progress);
 
                         cancellationToken.ThrowIfCancellationRequested();
 
@@ -197,10 +202,21 @@ public partial class MainWindow : Window, INotifyPropertyChanged
 
                         ctx.FillRectangle(Brushes.Black, new Rect(0, 0, Bounds.Width, Bounds.Height));
 
+                        var linesProcessed = 0;
+                        
                         lineData.ForEach(line =>
                         {
                             cancellationToken.ThrowIfCancellationRequested();
 
+                            linesProcessed++;
+
+                            if (linesProcessed == 1 || linesProcessed % 1_000_000 == 0)
+                            {
+                                var message = $"Drawing line {linesProcessed:N0} of {lineData.Count:N0}";
+                                
+                                Dispatcher.UIThread.Post(() => { Status.Content = message; });
+                            }
+                            
                             ctx.DrawLine(pens.GetPen(line.PenThickness), line.Points[0], line.Points[1]);
                         });
 

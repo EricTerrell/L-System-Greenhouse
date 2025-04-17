@@ -9,7 +9,7 @@ namespace L_System_Greenhouse.TurtleGraphics;
 public static class ConvertToTurtleGraphics
 {
     public static List<TurtleCommand> Convert(List<char> input, TurtleGraphicsState turtleGraphicsState, 
-        CancellationToken cancellationToken)
+        CancellationToken cancellationToken, IProgress<string>? progress = null)
     {
         var previousPosition = new Point(turtleGraphicsState.Position.X, turtleGraphicsState.Position.Y);
         
@@ -26,9 +26,19 @@ public static class ConvertToTurtleGraphics
 
         try
         {
+            int letterCount = 0;
+            
             input.ForEach(letter =>
             {
                 cancellationToken.ThrowIfCancellationRequested();
+
+                letterCount++;
+
+                if (letterCount == 1 || letterCount % 1_000_000 == 0)
+                {
+                    progress?.Report(
+                        $"Converting L-System output to turtle commands: Processing letter {letterCount:N0} of {input.Count:N0}");
+                }
 
                 currentState = currentState.Clone() as TurtleGraphicsState;
 

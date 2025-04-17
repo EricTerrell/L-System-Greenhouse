@@ -64,7 +64,7 @@ public class LSystem
         return Rewrite(Iterations, cancellationToken);
     }
 
-    public string Rewrite(int iterations, CancellationToken cancellationToken)
+    public string Rewrite(int iterations, CancellationToken cancellationToken, IProgress<string>? progress = null)
     {
         var currentAxiom = Axiom;
 
@@ -77,6 +77,8 @@ public class LSystem
 
             for (var i = 0; i < iterations; i++)
             {
+                progress?.Report($"Rewriting: Iteration {i} of {iterations}");
+                
                 cancellationToken.ThrowIfCancellationRequested();
 
                 currentAxiom = string.Join(
