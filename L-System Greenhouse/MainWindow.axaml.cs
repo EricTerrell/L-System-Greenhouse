@@ -307,41 +307,63 @@ public partial class MainWindow : Window, INotifyPropertyChanged
 
         if (files.Count >= 1)
         {
-            _file = files[0];
-            
-            // Open reading stream from the first file.
-            await using var readFileStream = await _file.OpenReadAsync();
-
-            using (BinaryReader binaryReader = new(readFileStream))
+            try
             {
-                var document =
-                    System.Text.Json.JsonSerializer
-                        .Deserialize<Document>(binaryReader.ReadString());
-                
-                document.LSystem.ToUI(UilSystem);
-                document.TurtleGraphicsState.ToUI(TurtleGraphicsStateUI);
+                _file = files[0];
+            
+                // Open reading stream from the first file.
+                await using var readFileStream = await _file.OpenReadAsync();
 
-                Title = $"{StringLiterals.AppName} - {_file.Name}";
+                using (BinaryReader binaryReader = new(readFileStream))
+                {
+                    var document =
+                        System.Text.Json.JsonSerializer
+                            .Deserialize<Document>(binaryReader.ReadString());
                 
-                Draw_OnClick(null, new RoutedEventArgs());
+                    document.LSystem.ToUI(UilSystem);
+                    document.TurtleGraphicsState.ToUI(TurtleGraphicsStateUI);
+
+                    Title = $"{StringLiterals.AppName} - {_file.Name}";
+                
+                    Draw_OnClick(null, new RoutedEventArgs());
+                }
+            }
+            catch (Exception ex)
+            {
+                var message = $"Cannot open file \"{_file.Name}\"";
+                
+                Log.Error(message, ex);
+
+                Status.Content = message;
             }
         }
     }
 
     private async void WriteFile()
     {
-        await using var writeFileStream = await _file.OpenWriteAsync();
-        await using BinaryWriter binaryWriter = new(writeFileStream);
+        try
+        {
+            await using var writeFileStream = await _file.OpenWriteAsync();
+            await using BinaryWriter binaryWriter = new(writeFileStream);
         
-        var document = new Document(
-            LSystem.LSystem.FromUI(UilSystem), 
-            L_System_Greenhouse.TurtleGraphics.TurtleGraphicsState.FromUI(TurtleGraphicsStateUI));
+            var document = new Document(
+                LSystem.LSystem.FromUI(UilSystem), 
+                L_System_Greenhouse.TurtleGraphics.TurtleGraphicsState.FromUI(TurtleGraphicsStateUI));
             
-        var serializedData = System.Text.Json.JsonSerializer.Serialize(document);
+            var serializedData = System.Text.Json.JsonSerializer.Serialize(document);
 
-        binaryWriter.Write(serializedData);
+            binaryWriter.Write(serializedData);
         
-        Title = $"{StringLiterals.AppName} - {_file.Name}";
+            Title = $"{StringLiterals.AppName} - {_file.Name}";
+        }
+        catch (Exception ex)
+        {
+            var message = $"Cannot save file \"{_file.Name}\"";
+                
+            Log.Error(message, ex);
+
+            Status.Content = message;
+        }
     }
     
     private void FileSave_OnClick(object? sender, RoutedEventArgs e)
