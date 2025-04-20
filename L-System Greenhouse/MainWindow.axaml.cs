@@ -203,7 +203,7 @@ public partial class MainWindow : Window, INotifyPropertyChanged
                         ctx.FillRectangle(Brushes.Black, new Rect(0, 0, Bounds.Width, Bounds.Height));
 
                         var linesProcessed = 0;
-                        
+
                         lineData.ForEach(line =>
                         {
                             cancellationToken.ThrowIfCancellationRequested();
@@ -213,20 +213,28 @@ public partial class MainWindow : Window, INotifyPropertyChanged
                             if (linesProcessed == 1 || linesProcessed % 1_000_000 == 0)
                             {
                                 var message = $"Drawing line {linesProcessed:N0} of {lineData.Count:N0}";
-                                
+
                                 Dispatcher.UIThread.Post(() => { Status.Content = message; });
                             }
-                            
+
                             ctx.DrawLine(pens.GetPen(line.PenThickness), line.Points[0], line.Points[1]);
                         });
 
                         lineCount = lineData.Count;
-                        
+
                         return bitmap;
                     }
                     catch (OperationCanceledException ex)
                     {
-                        Log.Info("User Cancelled", ex);    
+                        Log.Info("User Cancelled", ex);
+
+                        return null;
+                    }
+                    catch (Exception ex)
+                    {
+                        Log.Error("Exception processing L-System", ex);
+                        
+                        Dispatcher.UIThread.Post(() => { Status.Content = ex.Message; });
 
                         return null;
                     }
@@ -234,9 +242,9 @@ public partial class MainWindow : Window, INotifyPropertyChanged
             
             var computeTime = DateTime.Now - computeStartTime;
 
-            Bitmap = bitmap;
+           Bitmap = bitmap;
             
-            if (!_cancellationTokenSource.IsCancellationRequested)
+            if (!_cancellationTokenSource.IsCancellationRequested && Bitmap != null)
             {
                 // Draw
                 GraphicsSurface.Draw(bitmap);
