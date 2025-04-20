@@ -143,6 +143,8 @@ public partial class MainWindow : Window, INotifyPropertyChanged
         MimeTypes = ["application/octet-stream"]
     };
 
+    private record GraphicsInfo(Bitmap? Bitmap = null, Exception? Exception = null);
+    
     private async void Draw_OnClick(object? sender, RoutedEventArgs e)
     {
         try
@@ -173,7 +175,7 @@ public partial class MainWindow : Window, INotifyPropertyChanged
             Bitmap?.Dispose();
             Bitmap ??= null;
             
-            var bitmap = await Task.Run(() =>
+            var graphicsInfo = await Task.Run(() =>
                 {
                     try
                     {
@@ -222,34 +224,36 @@ public partial class MainWindow : Window, INotifyPropertyChanged
 
                         lineCount = lineData.Count;
 
-                        return bitmap;
+                        return new GraphicsInfo(bitmap);
                     }
                     catch (OperationCanceledException ex)
                     {
                         Log.Info("User Cancelled", ex);
 
-                        return null;
+                        return new GraphicsInfo(null, ex);
                     }
                     catch (Exception ex)
                     {
                         Log.Error("Exception processing L-System", ex);
                         
-                        Dispatcher.UIThread.Post(() => { Status.Content = ex.Message; });
-
-                        return null;
+                        return new GraphicsInfo(null, ex);
                     }
                 });
             
-            var computeTime = DateTime.Now - computeStartTime;
-
-           Bitmap = bitmap;
+            var computeTime = DateTime.Now - computeStartTime; 
+            
+            Bitmap = graphicsInfo.Bitmap;
             
             if (!_cancellationTokenSource.IsCancellationRequested && Bitmap != null)
             {
                 // Draw
-                GraphicsSurface.Draw(bitmap);
+                GraphicsSurface.Draw(Bitmap);
                 
                 Status.Content = $"Lines: {lineCount:N0}\tTime: {FormatUtils.FormatTimeSpan(computeTime)}";
+            }
+            else if (graphicsInfo.Exception != null)
+            {
+                Status.Content = graphicsInfo.Exception.Message;
             }
         }
         finally
