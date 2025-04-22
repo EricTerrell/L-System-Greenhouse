@@ -32,6 +32,17 @@ Open the sample files in the release to generate some striking images. They're i
 
 L-System Greenhouse runs on Windows or Linux. It could be easily updated to run on Apple OSX machines.
 
+# How to Build
+
+Go to the L-System Greenhouse\\L-System Greenhouse\\deploy folder. Run "deploy-all-framework-dependent.ps1" or 
+"deploy-all-self-contained.ps1". 
+
+The framework dependent build scripts will create relatively small executables, 
+which will require that .NET 9 has already been installed. 
+
+The self-contained scripts will create relatively large 
+executables which will not require a previous .NET 9 installation.
+
 # Developers
 
 L-System Greenhouse was developed in the C# programming language, using [`Avalonia`](https://avaloniaui.net/platforms), which allows developers to create .NET UI apps for Windows, Linux, and OSX. 
