@@ -3,14 +3,19 @@ using System.Threading;
 using Avalonia;
 using L_System_Greenhouse.Utils;
 using System.Collections.Generic;
+using log4net;
 
 namespace L_System_Greenhouse.TurtleGraphics;
 
 public static class ConvertToTurtleGraphics
 {
+    private static readonly ILog Log = LogManager.GetLogger(typeof(Program));
+
     public static List<TurtleCommand> Convert(List<char> input, TurtleGraphicsState turtleGraphicsState, 
         CancellationToken cancellationToken, IProgress<string>? progress = null)
     {
+        var startTime = DateTime.Now;
+        
         var previousPosition = new Point(turtleGraphicsState.Position.X, turtleGraphicsState.Position.Y);
         
         var result = new List<TurtleCommand>(
@@ -130,11 +135,18 @@ public static class ConvertToTurtleGraphics
                         break;
                 }
             });
+
+            if (turtleStateStack.Count > 0)
+            {
+                Log.Error($"turtleStateStack not empty. # items: {turtleStateStack.Count}");            
+            }
         }
         catch (OperationCanceledException)
         {
             result.Clear();
         }
+
+        Log.Info($"ConvertToTurtleGraphics.Convert: elapsed time: {DateTime.Now - startTime}");
 
         return result;
     }

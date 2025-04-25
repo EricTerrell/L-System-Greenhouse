@@ -206,6 +206,8 @@ public partial class MainWindow : Window, INotifyPropertyChanged
 
                         var linesProcessed = 0;
 
+                        var startTime = DateTime.Now;
+                        
                         lineData.ForEach(line =>
                         {
                             cancellationToken.ThrowIfCancellationRequested();
@@ -221,6 +223,8 @@ public partial class MainWindow : Window, INotifyPropertyChanged
 
                             ctx.DrawLine(pens.GetPen(line.PenThickness), line.Points[0], line.Points[1]);
                         });
+
+                        Log.Info($"MainWindow.Draw_OnClick: elapsed time: {DateTime.Now - startTime}");
 
                         lineCount = lineData.Count;
 

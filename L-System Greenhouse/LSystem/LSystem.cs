@@ -1,15 +1,15 @@
 ﻿using System;
-using System.Collections.ObjectModel;
 using System.Threading;
+using System.Linq;
+using System.Collections.Generic;
+using log4net;
 
 namespace L_System_Greenhouse.LSystem;
 
-using System.Text;
-using System.Linq;
-using System.Collections.Generic;
-
 public class LSystem
 {
+    private static readonly ILog Log = LogManager.GetLogger(typeof(Program));
+
     public LSystem(List<Production> productions, string axiom, int iterations)
     {
         Productions = productions;
@@ -66,6 +66,8 @@ public class LSystem
 
     public string Rewrite(int iterations, CancellationToken cancellationToken, IProgress<string>? progress = null)
     {
+        var startTime = DateTime.Now;
+        
         var currentAxiom = Axiom;
 
         try
@@ -92,6 +94,8 @@ public class LSystem
         {
             currentAxiom = string.Empty;
         }
+
+        Log.Info($"LSystem.Rewrite: elapsed time: {DateTime.Now - startTime}");
 
         return currentAxiom;
     }
