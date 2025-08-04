@@ -35,7 +35,9 @@ public partial class MainWindow : Window, INotifyPropertyChanged
             OnPropertyChanged();
         }
     }
-    
+
+    public int MaxPenThickness => PenPool.MaxThickness;
+
     private HelpWindow? _helpWindow;
 
     private IStorageFile _file;
@@ -164,7 +166,7 @@ public partial class MainWindow : Window, INotifyPropertyChanged
             var turtleGraphicsState =
                 L_System_Greenhouse.TurtleGraphics.TurtleGraphicsState.FromUI(TurtleGraphicsStateUI);
 
-            var pens = new PenPool((int)LineWidthUD.Value);
+            var pens = new PenPool();
             
             var cancellationToken = _cancellationTokenSource.Token;
 

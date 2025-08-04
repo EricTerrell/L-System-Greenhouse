@@ -9,11 +9,13 @@ public class PenPool
 {
     private readonly Dictionary<int, ImmutablePen> _pens;
 
-    public PenPool(int maxThickness)
+    public const int MaxThickness = 100;
+        
+    public PenPool()
     {
         _pens = new Dictionary<int, ImmutablePen>();
 
-        for (var thickness = 1; thickness <= maxThickness; thickness++)
+        for (var thickness = 1; thickness <= MaxThickness; thickness++)
         {
             var pen = new Pen
             {
@@ -27,6 +29,6 @@ public class PenPool
 
     public ImmutablePen GetPen(double thickness)
     {
-        return _pens[Math.Max(1, (int)Math.Ceiling(thickness))];
+        return _pens[Math.Max(1, (int)Math.Ceiling(Math.Min(thickness, MaxThickness)))];
     }
 }

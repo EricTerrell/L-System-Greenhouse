@@ -7,8 +7,8 @@
         mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
         MinWidth="1300"
         Width="1300"
-        MinHeight="850"
-        Height="850"
+        MinHeight="875"
+        Height="875"
         x:Class="L_System_Greenhouse.MainWindow"
         Title="L-System Greenhouse - Untitled"
         Closing="Window_OnClosing"
@@ -156,7 +156,7 @@
                     Target="TurtleStateGrid"
                     />
                 <Grid 
-                    RowDefinitions="*,*,*,*,*,*,*" 
+                    RowDefinitions="*,*,*,*,*,*,*,*" 
                     ColumnDefinitions="Auto,*" 
                     Width="350" 
                     HorizontalAlignment="Left"
@@ -196,14 +196,21 @@
                                    Minimum="1"
                                    Name="LineWidthIncrementUD" />
 
-                    <Label Grid.Row="5" Grid.Column="0" Content="Turn An_gle (degrees):" Target="TurnAngleUD"/>
-                    <NumericUpDown Grid.Row="5" Grid.Column="1"
+                    <Label Grid.Row="5" Grid.Column="0" Content="Max Line Width:" Target="LineWidthMaxTB" 
+                           Margin="0, 10, 0, 10" />
+                    <TextBlock Grid.Row="5" Grid.Column="1"
+                                    Margin="0, 10, 0, 10"
+                                    Text="{Binding Path=MaxPenThickness}"
+                                    Name="LineWidthMaxTB" />
+
+                    <Label Grid.Row="6" Grid.Column="0" Content="Turn An_gle (degrees):" Target="TurnAngleUD"/>
+                    <NumericUpDown Grid.Row="6" Grid.Column="1"
                                    Value="{Binding TurtleGraphicsStateUI.TurnAngle, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                    Minimum="1"
                                    Name="TurnAngleUD" />
 
-                    <Label Grid.Row="6" Grid.Column="0" Content="Turn Angle Incre_ment:" Target="TurnAngleIncrementUD"/>
-                    <NumericUpDown Grid.Row="6" Grid.Column="1"
+                    <Label Grid.Row="7" Grid.Column="0" Content="Turn Angle Incre_ment:" Target="TurnAngleIncrementUD"/>
+                    <NumericUpDown Grid.Row="7" Grid.Column="1"
                                    Value="{Binding TurtleGraphicsStateUI.TurnAngleIncrement, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                    Minimum="1"
                                    Name="TurnAngleIncrementUD" />

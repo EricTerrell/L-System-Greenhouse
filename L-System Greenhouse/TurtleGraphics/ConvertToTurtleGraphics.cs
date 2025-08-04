@@ -31,7 +31,7 @@ public static class ConvertToTurtleGraphics
 
         try
         {
-            int letterCount = 0;
+            var letterCount = 0;
             
             input.ForEach(letter =>
             {
